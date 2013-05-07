@@ -7,8 +7,9 @@ Ext.define('QuantoSpendi.view.Main', {
             ui: 'gray'
         },
         items: [
-            {xclass: 'QuantoSpendi.view.Spese'},
-            {xclass: 'QuantoSpendi.view.Categorie'}
+            { xclass: 'QuantoSpendi.view.Spese' },
+            { xclass: 'QuantoSpendi.view.Categorie' },
+            { xclass: 'QuantoSpendi.view.Search' }
         ]
     }
 });
