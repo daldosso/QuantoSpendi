@@ -20,6 +20,14 @@ Ext.define('QuantoSpendi.view.SearchList', {
                         name: 'query',
                         listeners: {
                             keyup: function(me) {
+                                var match = me.getValue().toUpperCase();
+                                
+                                Ext.data.StoreManager.lookup('SpeseDettaglio').load({
+                                    params: {
+                                        match: match
+                                    }
+                                });
+                                
 //                                var lotti = Ext.data.StoreManager.lookup('Lotti');
 //                                lotti.clearFilter();
 //                                lotti.filterBy(function(record, id) {

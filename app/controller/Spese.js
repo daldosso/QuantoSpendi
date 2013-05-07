@@ -67,31 +67,6 @@ Ext.define('QuantoSpendi.controller.Spese', {
         this.getSpeseContainer().push(this.spesa);
     },
             
-    onAccettazioneTap: function() {
-        var codAccettazione = this.getCodAccettazione().getValue();
-        if (codAccettazione === '') {
-            Ext.Msg.alert('Errore', 'Specificare l\'accettazione');
-            return false;
-        }
-        Ext.data.StoreManager.lookup('Analisi').load({
-            params: {
-                codAccettazione: codAccettazione
-            }
-        });
-        Ext.data.StoreManager.lookup('Risultati').load({
-            params: {
-                refCodInt: codAccettazione
-            }
-        });
-    },
-    onAnalisiSelect: function(me, newValue) {
-        Ext.data.StoreManager.lookup('Campioni').load({
-            params: {
-                codAccettazione: this.getCodAccettazione().getValue(),
-                codAnalisi: newValue
-            }
-        });
-    },
     onRisultatiItemTap: function(list, index, target, record) {
         if (!this.campione) {
             this.campione = Ext.widget('risultatiCampione');

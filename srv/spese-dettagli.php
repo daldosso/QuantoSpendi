@@ -7,6 +7,7 @@
   $anno = $_GET["anno"];
   $idCategoria = $_GET["categoria"];
   $idSpesa = $_GET["idSpesa"];
+  $match = $_GET["match"];
   
   $firstDay = getFirstDayOfMonth($mese, $anno);
   $lastDay = getLastDayOfMonth($mese, $anno);
@@ -16,6 +17,13 @@
   }
   if ($idSpesa) {
       $where = "WHERE s.idSpesa = $idSpesa";
+  }
+  
+  if ($match != '') {
+      $where = "WHERE UPPER(s.note) like '%$match%'
+                   OR UPPER(c.descrizione) like '%$match%'
+                   OR DATE_FORMAT(s.dataSpesa, '%d/%m/%Y') like '%$match%'
+               ";
   }
   
   $conn = mysql_connect($_CONFIG['host'], $_CONFIG['user'], $_CONFIG['pass']) or die('Impossibile stabilire una connessione: ' . mysql_error());
