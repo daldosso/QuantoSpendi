@@ -3,7 +3,6 @@ Ext.define('QuantoSpendi.view.SpeseList', {
     xtype: 'speseList',
     config: {
         title: 'Spese',
-        //ui: 'round',
         store: 'Spese',
         itemTpl: [
             '<span style="float: left; width: 150px">{mese} {anno}:</span> <b>{importo} €</b>'

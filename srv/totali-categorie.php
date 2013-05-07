@@ -5,6 +5,9 @@
   $mese = $_GET["mese"];
   $anno = $_GET["anno"];
   
+  if (!$mese) { $mese = 0; }
+  if (!$anno) { $anno = 0; }
+  
   $conn = mysql_connect($_CONFIG['host'], $_CONFIG['user'], $_CONFIG['pass']) or die('Impossibile stabilire una connessione: ' . mysql_error());
   mysql_select_db($_CONFIG['dbname']);
 

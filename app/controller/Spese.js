@@ -107,6 +107,10 @@ Ext.define('QuantoSpendi.controller.Spese', {
         if (!this.totaliCategorie) {
             this.totaliCategorie = Ext.widget('totaliCategorie');
         }
+        
+        this.selectedMonth = record.get('numMese');
+        this.selectedYear = record.get('anno');
+        
         Ext.data.StoreManager.lookup('TotaliCategorie').load({
             params: {
                 mese: record.get('numMese'),
@@ -120,155 +124,22 @@ Ext.define('QuantoSpendi.controller.Spese', {
         if (!this.dettaglio) {
             this.dettaglio = Ext.widget('dettaglio');
         }
+        
+        this.selectedCategoria = record.get('idCategoria');
+        
         Ext.data.StoreManager.lookup('SpeseDettaglio').load({
             params: {
-                mese: record.get('mese'),
-                anno: record.get('anno'),
-                categoria: record.get('idCategoria')
+                mese: this.selectedMonth,
+                anno: this.selectedYear,
+                categoria: this.selectedCategoria
             }
         });
         this.getSpeseContainer().push(this.dettaglio);
     },
             
-    addRisultato: function(container, record, suffix, index) {
-        var name = 'RISESITO' + suffix + '_' + index;
-        var value = record.get('RISESITO' + suffix);
-
-        if (record.get('PDATIPO_REG_' + suffix) === 'T') {
-            container.add({
-                xtype: 'textfield',
-                label: record.get('PDADESC_REG_' + suffix) || 'Esito',
-                name: name,
-                value: value,
-                autoCapitalize: true,
-                clearIcon: true
-            });
-        } else if (record.get('PDATIPO_REG_' + suffix) === 'N') {
-            container.add({
-                xtype: 'numberfield',
-                name: name,
-                value: value,
-                label: record.get('PDADESC_REG_' + suffix) || 'Esito'
-            });
-        } else if (record.get('PDATIPO_REG_' + suffix) === 'P') {
-            container.add({
-                xtype: 'selectfield',
-                label: record.get('PDADESC_REG_' + suffix) || 'Esito',
-                name: name,
-                value: value,
-                store: 'PosNeg',
-                displayField: 'value',
-                valueField: 'key'
-            });
-        } else if (record.get('PDATIPO_REG_' + suffix) === 'F') {
-            container.add({
-                xtype: 'checkboxfield',
-                label: record.get('PDADESC_REG_' + suffix) || 'Fatto',
-                name: name,
-                //value: value,
-                value: 'F',
-                checked: value === 'F',
-                autoCapitalize: true,
-                clearIcon: true
-            });
-        }
-    },
-    makeRisultati: function() {
-        var records = Ext.data.StoreManager.lookup('Risultati').getData().items;
-        var container = this.campione.down('fieldset');
-        container.removeAll(true, true);
-
-        var adeCod = this.getAnalisi().getValue();
-        var camCod = this.campione.camCod;
-        var risRifCam = this.campione.down('spinnerfield').getValue();
-
-        for (var i = 0; i < records.length; i++) {
-
-            if (adeCod !== records[i].get('ADECOD') ||
-                    camCod !== records[i].get('CAMCOD') ||
-                    risRifCam !== records[i].get('RISRIFCAM')) {
-
-                continue;
-            }
-
-            var fieldset = Ext.create('Ext.form.FieldSet', {
-                //padding: 10
-            });
-
-            this.campione.down('label[name="ANALISI"]').setHtml('Analisi: ' + records[i].get('ADEDEN'));
-            this.campione.down('label[name="PDP"]').setHtml('PDP: ' + records[i].get('PDPCODINT') + ' - ' + records[i].get('PDPDEN'));
-
-            fieldset.add([{
-                    xtype: 'hiddenfield',
-                    name: 'RISCOD_' + i,
-                    value: records[i].get('RISCOD')
-                }, {
-                    xtype: 'hiddenfield',
-                    name: 'RISRIFCAM_' + i,
-                    value: risRifCam
-                }, {
-                    xtype: 'hiddenfield',
-                    name: 'ESACOD_' + i,
-                    value: records[i].get('ESACOD')
-                }, {
-                    xtype: 'hiddenfield',
-                    name: 'PDACOD_' + i,
-                    value: records[i].get('PDACOD')
-                }, {
-                    xtype: 'label',
-                    html: 'Azione: ' + records[i].get('PDANUM_ORDINE') + ') ' + records[i].get('PDADESC'),
-                    padding: 10
-                }, {
-                    xtype: 'selectfield',
-                    name: 'LOMCOD_' + i,
-                    label: 'Lotto',
-                    store: 'Lotti',
-                    displayField: 'PRONOME_PRODOTTO',
-                    valueField: 'LOMCOD',
-                    value: records[i].get('LOMCOD')
-                }]);
-
-            this.addRisultato(fieldset, records[i], '1', i);
-            this.addRisultato(fieldset, records[i], '2', i);
-
-            var operatore = records[i].get('UTECOD');
-            if (!operatore || operatore === '') {
-                operatore = IziFold.session.utecod;
-            }
-
-            fieldset.add([{
-                    xtype: 'datepickerfield',
-                    destroyPickerOnHide: true,
-                    name: 'RISDATARIF_' + i,
-                    label: 'Data',
-                    picker: {
-                        xtype: 'datepicker',
-                        slotOrder: ["day", "month", "year"],
-                        yearFrom: new Date().getFullYear() - 10,
-                        yearTo: new Date().getFullYear() + 10,
-                        value: new Date()
-                    },
-                    dateFormat: 'd/m/Y',
-                    value: records[i].get('RISDATARIF')
-                }, {
-                    xtype: 'selectfield',
-                    name: 'UTECOD_' + i,
-                    label: 'Operatore',
-                    store: 'Operatori',
-                    displayField: 'UTENOME',
-                    value: operatore,
-                    valueField: 'UTECOD'
-                }]);
-
-            container.add([fieldset]);
-        }
-    },
-            
-    onCampioneSelect: function(spin, value, direction) {
-        this.makeRisultati();
-    },
-            
     onItemSwipe: function(me, ix, target, record, event, options) {
+        var dettaglio = this;
+
         if (event.direction == "left") {
             var del = Ext.create("Ext.Button", {
                 ui: "decline",
@@ -293,7 +164,9 @@ Ext.define('QuantoSpendi.controller.Spese', {
                                 var store = record.stores[0];
                                 store.load({
                                     params: {
-                                        idSpesa: record.get('idSpesa')
+                                        mese: dettaglio.selectedMonth,
+                                        anno: dettaglio.selectedYear,
+                                        categoria: dettaglio.selectedCategoria
                                     }
                                 });
                             },
@@ -328,6 +201,12 @@ Ext.define('QuantoSpendi.controller.Spese', {
     
     onSpeseBack: function() {
         Ext.data.StoreManager.lookup('Spese').load();
+        Ext.data.StoreManager.lookup('TotaliCategorie').load({
+            params: {
+                mese: this.selectedMonth,
+                anno: this.selectedYear
+            }
+        });
     }
 
 });

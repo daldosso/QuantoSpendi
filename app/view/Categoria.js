@@ -25,8 +25,6 @@ Ext.define('QuantoSpendi.view.Categoria', {
                         clearIcon: true
                     }
                 ]}]
-
-
     }
 
 });

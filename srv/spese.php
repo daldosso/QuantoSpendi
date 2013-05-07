@@ -9,6 +9,7 @@
     SELECT month(s.dataSpesa) as mese, year(s.dataSpesa) as anno, replace(cast(sum(importo) as char), '.', ',') as totale
       FROM qsSpese s
      GROUP BY month(s.dataSpesa), year(s.dataSpesa)
+     ORDER BY month(s.dataSpesa) desc, year(s.dataSpesa) desc
   ";
   $result = mysql_query($sql) or die(mysql_error());
   

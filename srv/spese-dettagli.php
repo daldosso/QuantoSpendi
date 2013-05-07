@@ -1,14 +1,18 @@
 <?php
 
   require 'config.php';
+  require 'utils.php';
   
   $mese = $_GET["mese"];
   $anno = $_GET["anno"];
   $idCategoria = $_GET["categoria"];
   $idSpesa = $_GET["idSpesa"];
   
+  $firstDay = getFirstDayOfMonth($mese, $anno);
+  $lastDay = getLastDayOfMonth($mese, $anno);
+  
   if ($idCategoria) {
-      $where = "WHERE c.idCategoria = $idCategoria";
+      $where = "WHERE c.idCategoria = $idCategoria AND s.dataSpesa >= '$firstDay' AND s.dataSpesa <= '$lastDay'";
   }
   if ($idSpesa) {
       $where = "WHERE s.idSpesa = $idSpesa";
@@ -25,6 +29,7 @@
      $where
      ORDER BY dataSpesa DESC
   ";
+  
   $result = mysql_query($sql) or die(mysql_error());
   
   $sqlFields = 'SHOW FIELDS FROM qsSpese';

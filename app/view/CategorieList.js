@@ -5,6 +5,7 @@ Ext.define('QuantoSpendi.view.CategorieList', {
         title: 'Categorie',
         store: 'Categorie',
         itemTpl: [
+            '<div id="idCategoria{idCategoria}"></div>' + 
             '{descrizione}'
         ],
         items: [{
