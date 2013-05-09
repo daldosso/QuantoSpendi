@@ -33,7 +33,7 @@ Ext.define('QuantoSpendi.view.Spesa', {
                     }, {
                         xtype: 'datepickerfield',
                         destroyPickerOnHide: true,
-                        name: 'data',
+                        name: 'dataSpesa',
                         label: 'Data',
                         value: new Date()
                     }, {

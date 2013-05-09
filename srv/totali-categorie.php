@@ -2,6 +2,9 @@
 
   require 'config.php';
   
+  session_start();
+  $idUser = $_SESSION['idUser'];
+  
   $mese = $_GET["mese"];
   $anno = $_GET["anno"];
   
@@ -14,7 +17,8 @@
   $sql = "      
     SELECT c.idCategoria, c.descrizione, replace(cast(coalesce(sum(s.importo), 0) as char), '.', ',') as totale
       FROM qsCategorie c
-      LEFT JOIN qsSpese s ON (s.categoria = c.idCategoria and month(s.dataSpesa) = $mese AND year(s.dataSpesa) = $anno)
+     INNER JOIN qsSpese s ON (s.categoria = c.idCategoria and month(s.dataSpesa) = $mese AND year(s.dataSpesa) = $anno)
+     WHERE idUser = $idUser    
      GROUP BY c.idCategoria
      ORDER BY c.descrizione
   ";

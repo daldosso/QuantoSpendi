@@ -3,6 +3,7 @@ Ext.define('QuantoSpendi.controller.Spese', {
     config: {
         refs: {
             speseContainer: 'speseContainer',
+            searchContainer: 'searchContainer',
             addSpesa: 'speseContainer button[action=addSpesa]',
             confirm: 'speseContainer button[action=confirm]'
         },
@@ -15,10 +16,11 @@ Ext.define('QuantoSpendi.controller.Spese', {
                 itemswipe: 'onItemSwipe'
             },
             dettaglio: {
-                itemswipe: 'onItemSwipe'
+                itemswipe: 'onItemSwipe',
+                itemdoubletap: 'onDettaglioDoubleTap'
             },
-            risultatiList: {
-                itemtap: 'onRisultatiItemTap'
+            searchList: {
+                itemdoubletap: 'onSearchDoubleTap'
             },
             totaliCategorie: {
                 itemtap: 'onTotaliCategorieItemTap'
@@ -60,10 +62,29 @@ Ext.define('QuantoSpendi.controller.Spese', {
         }
     },
             
-    onSpesaAdd: function() {
+    editSpesa: function(idSpesa) {
         if (!this.spesa) {
             this.spesa = Ext.widget('spesa');
         }
+        if (Ext.isNumeric(idSpesa)) {
+            var speseDettaglio = Ext.data.StoreManager.lookup('SpeseDettaglio');
+            var me = this;
+            speseDettaglio.load({
+                params: {
+                    idSpesa: idSpesa
+                },
+                callback: function() {
+                    me.spesa.reset();
+                    me.spesa.setRecord(speseDettaglio.getById(idSpesa));
+                }
+            })
+        } else {
+            this.spesa.down('[name=idSpesa]').setValue('');
+        }
+    },
+            
+    onSpesaAdd: function(idSpesa) {
+        this.editSpesa(idSpesa);
         this.getSpeseContainer().push(this.spesa);
     },
             
@@ -176,12 +197,31 @@ Ext.define('QuantoSpendi.controller.Spese', {
     
     onSpeseBack: function() {
         Ext.data.StoreManager.lookup('Spese').load();
+        Ext.data.StoreManager.lookup('Categorie').load();
         Ext.data.StoreManager.lookup('TotaliCategorie').load({
             params: {
                 mese: this.selectedMonth,
                 anno: this.selectedYear
             }
         });
+        Ext.data.StoreManager.lookup('SpeseDettaglio').load({
+            params: {
+                mese: this.selectedMonth,
+                anno: this.selectedYear,
+                categoria: this.selectedCategoria
+            }
+        });        
+    },
+            
+    onDettaglioDoubleTap: function(me, index, target, record, e, eOpts) {
+        this.onSpesaAdd(record.get('idSpesa'));
+    },
+    
+    onSearchDoubleTap: function(me, index, target, record, e, eOpts) {
+        var idSpesa = record.get('idSpesa');
+        this.editSpesa(idSpesa);
+        this.getSearchContainer().push(this.spesa);
     }
+    
 
 });

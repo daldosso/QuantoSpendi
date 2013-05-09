@@ -23,6 +23,7 @@
       if ($count == 1) {
           $row = mysql_fetch_array($result);
           $_SESSION['user'] = $row['username'];
+          $_SESSION['idUser'] = $row['idUser'];
           $success = true;
       }
 

@@ -2,12 +2,16 @@
 
   require 'config.php';
   
+  session_start();
+  $idUser = $_SESSION['idUser'];
+  
   $conn = mysql_connect($_CONFIG['host'], $_CONFIG['user'], $_CONFIG['pass']) or die('Impossibile stabilire una connessione: ' . mysql_error());
   mysql_select_db($_CONFIG['dbname']);
 
   $sql = "      
     SELECT month(s.dataSpesa) as mese, year(s.dataSpesa) as anno, replace(cast(sum(importo) as char), '.', ',') as totale
       FROM qsSpese s
+     WHERE idUser = $idUser 
      GROUP BY month(s.dataSpesa), year(s.dataSpesa)
      ORDER BY month(s.dataSpesa) desc, year(s.dataSpesa) desc
   ";

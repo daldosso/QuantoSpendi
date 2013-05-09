@@ -6,7 +6,7 @@ Ext.define('QuantoSpendi.view.Dettaglio', {
         store: 'SpeseDettaglio',
         itemTpl: [
             '<div id="idSpesa{idSpesa}"></div>' + 
-            'Data: {dataSpesa}<br/>' + 
+            'Data: {dataSpesaFormatted}<br/>' + 
             'Importo: {importo} €<br/>' + 
             'Categoria: {categoria}<br/>' +
             'Note: {note}<br/>'
