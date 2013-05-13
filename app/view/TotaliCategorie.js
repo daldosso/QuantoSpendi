@@ -5,7 +5,8 @@ Ext.define('QuantoSpendi.view.TotaliCategorie', {
         title: 'Totali categorie',
         store: 'TotaliCategorie',
         itemTpl: [
-            '<span style="float: left; width: 150px">{descrizione}:</span> <b>&nbsp;&nbsp;&nbsp;{importo} €</b>'
+            '<div style="display: inline">{descrizione}:</div>',
+            '<div style="font-weight: bold; text-align: right; display: inline; float: right">{importo} €</div>'
         ],
         items: []
     }

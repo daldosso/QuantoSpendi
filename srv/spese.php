@@ -9,7 +9,7 @@
   mysql_select_db($_CONFIG['dbname']);
 
   $sql = "      
-    SELECT month(s.dataSpesa) as mese, year(s.dataSpesa) as anno, replace(cast(sum(importo) as char), '.', ',') as totale
+    SELECT month(s.dataSpesa) as mese, year(s.dataSpesa) as anno, replace(cast(sum(importo) as char), '.', ',') as totale, sum(importo) as importo
       FROM qsSpese s
      WHERE idUser = $idUser 
      GROUP BY month(s.dataSpesa), year(s.dataSpesa)
@@ -47,6 +47,10 @@
       'type' => 'string',
       'name' => 'importo'
   );
+  $fields[] = array(
+      'type' => 'integer',
+      'name' => 'importoRaw'
+  );
 
   $data['success'] = 'true';
   $data['metaData'] = array(
@@ -66,7 +70,8 @@
           'numMese' => $row['mese'],
           'mese' => $meseDes,
           'anno' => $row['anno'],
-          'importo' => $row['totale']
+          'importo' => $row['totale'],
+          'importoRaw' => $row['importo']
       );
   }
   

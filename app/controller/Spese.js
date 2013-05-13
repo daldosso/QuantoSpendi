@@ -5,10 +5,13 @@ Ext.define('QuantoSpendi.controller.Spese', {
             speseContainer: 'speseContainer',
             searchContainer: 'searchContainer',
             addSpesa: 'speseContainer button[action=addSpesa]',
-            confirm: 'speseContainer button[action=confirm]'
+            confirm: 'button[action=confirm]'
         },
         control: {
             speseContainer: {
+                back: 'onSpeseBack'
+            },
+            searchContainer: {
                 back: 'onSpeseBack'
             },
             speseList: {
